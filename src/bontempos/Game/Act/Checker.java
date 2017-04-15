@@ -53,6 +53,10 @@ public class Checker implements Comparable<Checker> {
 	public void setPriority(int priority){
 		this.priority = priority;
 	}
+	
+	public void setActionName(String name){
+		this.actionName = name;
+	}
 
 	//--------------------------------------------------------------------------------------<   GETTERS  >
 

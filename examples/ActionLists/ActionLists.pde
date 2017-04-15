@@ -34,12 +34,7 @@ void setup() {
   actList.setAutoRepeat(false);  //optional
 
   //confirming actions were added on the ActionList object
-  for (ActionList a : act.getActionLists() ) {
-    for (int i = 0; i < actList.size(); i++) {
-      Action e = a.get(i);
-      println("Action", i, "name:", e.getActionName());
-    }
-  }
+  actList.printList();
 } 
 
 

@@ -82,21 +82,31 @@ public class ActionList extends ArrayList<Action> {
 
 	public void setEvalName(String name){
 		this.evalNextActionName = name;
+		ckEvalNext.setActionName(evalNextActionName);
 	}
 
 
 	public int getIndex(){
 		return index;
 	}
-	
+
 	void reactiveAllActions(){
 		for(Action a : this){
 			if(!a.active)a.setActive(true);
 		}
 	}
-	
+
 	public void reverse(){
 		reverseList = !reverseList;
 		Collections.reverse(this);
+	}
+
+	public void printList(){
+
+		for (int i = 0; i < this.size(); i++) {
+			Action e = this.get(i);
+			System.out.println("Action "+ i + ": name: "+  e.getActionName() + ", method: " + e.method);
+		}
+
 	}
 }
