@@ -54,6 +54,10 @@ public class Countdown {
 	public int getLoops() {
 		return loops;
 	}
+	
+	public boolean isActive(){
+		return active;
+	}
 
 	//--------------------------------------------------------------------------------------<   SETTERS  >
 
@@ -106,7 +110,7 @@ public class Countdown {
 	public void reset() {
 		timeout = false;
 		stop = true;
-		if (toInvoke != null && repeat ) toInvoke.active = true;
+		if (toInvoke != null ) toInvoke.active = true;
 	}
 
 
@@ -130,7 +134,7 @@ public class Countdown {
 					loops ++;
 
 					if (toInvoke != null)
-						AConstants.get().addEvent(toInvoke);
+						AConstants.get().addAction(toInvoke);
 
 					if (autoStop)
 						stop = true;
