@@ -12,6 +12,7 @@ int actionsPerformed = 0;
 
 Act act;
 boolean finished = false;
+float[] currentPosition = {0f, 0f};
 
 void setup() {
   size(100, 100);
@@ -22,18 +23,19 @@ void setup() {
 
   //creating a set of actions
   Action[] drawRectangle = {
-    new Action("action01", this, "moveTo", 0, 0), 
-    new Action("action02", this, "moveTo", width, 0), 
-    new Action("action03", this, "moveTo", width, height)
+    new Action("action01", this, "moveTo", 10, 10), 
+    new Action("action02", this, "moveToDraw", width-10, 10), 
+    new Action("action03", this, "moveToDraw", width-10, height-10)
   };
 
   //adding a set of actions into the ActionList object
-  actList.add(drawRectangle);
+  actList.addSet(drawRectangle);
 
   //if true, actions will be played in a loop
   actList.setAutoRepeat(false);  //optional
 
   //confirming actions were added on the ActionList object
+  println("listed actions to execute");
   actList.printList();
 } 
 
@@ -41,29 +43,43 @@ void setup() {
 
 
 void draw() {
-  act.update();
 }
 
 
-
+void moveToDraw(float x, float y) {
+  line( currentPosition[0], currentPosition[1], x, y );
+  moveTo(x, y);
+}
 
 void moveTo(float x, float y) {
 
   /*
-   takes 1 second to execute;
+   this takes 1 second to execute;
    prepare an action to be performed after countdown = timeout
    start counting
    */
 
   println(millis(), "------> move to", x, y);
 
-  Object target = this; 
-  String methodName = "setFinished";
-  boolean value = true;
-  Action finished = new Action(target, methodName, value);
+  String currentActionWasInvokedby = actList.getCurrentEvalActionName();
+  println("##:", currentActionWasInvokedby);
 
+  //next 3 lines are optional to fill Action parameters below
+  //Object target = this; 
+  //String methodName = "setFinished";
+  //boolean value = true;
 
-  Countdown c = new Countdown(1000, finished);
+  //Action finished = new Action(target, methodName, value); //use this line if the action "finished" will be used again in another place.
+
+  //Countdown c = new Countdown(1000, finished); //countdown = timer
+
+  //the line below is the shortcut for adding a timer constrained to all lines commented above.
+
+  Countdown c = new Countdown(1000, new Action(this, "setFinished", true)); //TODO i want this name to be dynamically set  based on the action which initially invoked this method
+
+  currentPosition[0] = x;
+  currentPosition[1] = y;
+
   c.start();
 }
 
@@ -75,7 +91,8 @@ void setFinished(boolean finished) {
   this.finished = finished;
 
   //calls the next action on the actionList object
-  Action.perform("evalNext");
+  //next line creates an action called "evalNext" <- default name for the actionList listner/checker.
+  Action.perform("evalNext");  
 
   actionsPerformed++;
 }
@@ -86,6 +103,7 @@ void setFinished(boolean finished) {
 void keyTyped() {
   println(millis(), "------ START ----- ");
 
+  background(random(200, 255));
   //line below is only necessary if actionList object will perform actions in a loop
   actList.reset();
 

@@ -10,14 +10,17 @@ Act act;
 CustomClass timeKeeper = new CustomClass();
 
 Countdown t1 = new Countdown(1000);
+
 Action customAction = new Action(this, "doSomething");
 Countdown t2 = new Countdown(2000, customAction);
 
 Action trackSeconds = new Action(timeKeeper, "newSecond");
 Countdown t3 = new Countdown(1000, trackSeconds);
 
+Countdown tt = new Countdown(1500, new Action("sayIt") );
+
 //Checker ckAction = new Checker("actionFinished");
-Checker ckAction;
+Checker ckAction, hearIt;
 
 Action actionFinished = new Action(this, "setValue", true);
 
@@ -33,21 +36,16 @@ void setup() {
   //actionFinished.setName("actionFinished");
   
   ckAction = new Checker("actionFinished", this, "setValue", true);
+  hearIt = new Checker("sayIt", this, "heard");
   println(millis(), "t starts now");
   t1.start();
   t3.setRepeat(true);
   t3.start();
+  tt.start();
 }
 
 void draw() {
 
-  //option 1
-  //t1.update();
-  //t2.update();
-  //t3.update();
-
-  //option 2
-  act.update();
 
   if (t1.timeout()) {
     t1.reset();
@@ -74,6 +72,9 @@ void setValue(boolean b){
   println("value was set to", b);
 }
 
+void heard(){
+  println(millis(), "I have heard");
+}
 
 public class CustomClass { //set explicit as public or Action object can't perform here
   CustomClass() {

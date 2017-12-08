@@ -87,25 +87,28 @@ public class AConstants {
 	//////////////////////////////////////////////////// UPDATE	
 
 	public void updateLists(){
-		if(timers.size()>0){
+		if(!timers.isEmpty()){
+			//there is a problem in array name update with timer and checker.
 			for(int i = timers.size()-1; i >= 0; i--){
 				Countdown t = timers.get(i);
+				//System.out.println("update list timer:" + t.toInvoke.method);
 				t.update();
+				
 			}
 		}
 	
-		if(events.size()>0){
+		if(!events.isEmpty()){
 			for(int i = events.size()-1; i >= 0; i--){
 				Action e = events.get(i);
 				if(e.isActive()) {
 					e.eval();
 				}else{
-					events.remove(e);
+					if(e.autoRemove) events.remove(e);
 				}
 			}
 		}
 		
-		if(actionLists.size()>0){
+		if(!actionLists.isEmpty()){
 			for(int i = actionLists.size()-1; i>=0; i--){
 				ActionList L = actionLists.get(i);
 				L.update();
@@ -116,20 +119,26 @@ public class AConstants {
 	}
 
 	//////////////////////////////////////////////////// METHODS		
-	
+	/* 
+	 * checks if an action (name) exists in the list of actions and returns true if yes, plus executes the action
+	*/
 	public boolean check(String actionName){
 		Collections.sort(checkers);
-		//System.out.println("checking if action: "+ actionName + " exists in checking list");
+		//System.out.print("checking if action: "+ actionName + " exists in checking list");
 		for(Checker c : checkers){
 			if(c.actionName.equals(actionName)){
-				if(c.isActive() && !c.isChecked()){
+				if(c.isActive() && ( c.permanent || !c.isChecked() )){
+				
 					c.checked = true;
 					c.dispatchAction();
+					//System.out.println("...it exists!");
 					return true;
+					
 				}
 			}
 			
 		}
+		//System.out.println("...does not exist!");
 		return false;
 	}
 }

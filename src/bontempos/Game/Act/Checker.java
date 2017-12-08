@@ -1,3 +1,12 @@
+/**
+ * Checker is a custom listener which waits for an action to be called, and so it invokes the action contained method with/out its parameters
+ *
+ * @author       Anderson Sudario
+ * @version      1.0
+ * 2017
+ */
+
+
 package bontempos.Game.Act;
 
 public class Checker implements Comparable<Checker> {
@@ -7,9 +16,10 @@ public class Checker implements Comparable<Checker> {
 	String method;    //the name of the function within the object to invoke [0] function name [1]... for parameters
 	Object[] params;
 	Action toInvoke = null;
-	boolean checked = false;
+	boolean checked = false; //after checker identifies an action is checked, marks as true (at AConstant.java)
 	boolean active;
 	boolean autoRemove;
+	boolean permanent = false; //if true, ignores the state of "checked" var
 	int priority = 0;
 	String label;
 
@@ -57,6 +67,10 @@ public class Checker implements Comparable<Checker> {
 	public void setActionName(String name){
 		this.actionName = name;
 	}
+	
+	public void setPermanent(boolean permanent){
+		this.permanent = permanent;
+	}
 
 	//--------------------------------------------------------------------------------------<   GETTERS  >
 
@@ -82,6 +96,7 @@ public class Checker implements Comparable<Checker> {
 
 		//toInvoke.setAutoRemove(true);
 		AConstants.get().addAction(toInvoke);
+		
 		if(autoRemove) {
 			remove();
 		}

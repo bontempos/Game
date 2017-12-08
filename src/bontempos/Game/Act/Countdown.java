@@ -1,12 +1,22 @@
+/**
+ * Countdown is a custom timer which depends on milliseconds to evaluate its timeout and optionally dispatch an action.
+ *
+ *
+ * @author       Anderson Sudario
+ * @version      1.0
+ * 2017
+ */
+
+
 package bontempos.Game.Act;
 
+import java.lang.reflect.Method;
 
 public class Countdown {
 
 
 	public int time;
 	public int interval;
-
 
 	int start;
 	int loops;
@@ -34,7 +44,9 @@ public class Countdown {
 	public Countdown(int interval, Action toInvoke) {
 		this.interval = interval;
 		AConstants.get().addTimer(this);
-		this.toInvoke = new Action(toInvoke.target, toInvoke.method, toInvoke.params); // copying
+		//System.out.println("timer created with action ("+toInvoke.method+") and interval ("+ interval +")");
+		//this.toInvoke = new Action(toInvoke.target, toInvoke.method, toInvoke.params); // copying
+		this.toInvoke = toInvoke;
 	}
 
 	//--------------------------------------------------------------------------------------<   GETTERS  >

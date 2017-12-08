@@ -1,3 +1,13 @@
+/**
+ * Action is a container, where the name of a method and parameters can be called by a Checker or Countdown object. Actions can be stacked on an ActionList Object.
+ *
+ *
+ * @author       Anderson Sudario
+ * @version      1.0
+ * 2017
+ */
+
+
 package bontempos.Game.Act;
 
 import java.lang.reflect.Method;
@@ -6,6 +16,7 @@ import java.lang.reflect.Method;
 public class Action {
 
 	private static Action instance;
+	public boolean echo = false;
 
 	public Object target; // the target object (where action will occur)
 	public String method; // the name of the function within the object to invoke [0]
@@ -14,6 +25,7 @@ public class Action {
 
 	public String actionName;
 	boolean active = true;
+	boolean performed = false;
 	boolean autoRemove = true;
 
 	//--------------------------------------------------------------------------------------<   INIT  >
@@ -33,7 +45,8 @@ public class Action {
 
 	public Action(String actionName){
 		this.actionName = actionName;
-		AConstants.get().check(actionName);
+		//Action.perform(actionName);
+		//AConstants.get().check(actionName);
 	}
 
 
@@ -49,6 +62,10 @@ public class Action {
 	
 	public void setActive(boolean b){
 		this.active = b;
+	}
+	
+	public void setEcho(boolean b){
+		this.echo = b;
 	}
 
 	//--------------------------------------------------------------------------------------<   GETTERS  >
@@ -71,12 +88,18 @@ public class Action {
 
 	//--------------------------------------------------------------------------------------<   METHODS  >
 
-	public void eval() {
+	public String  eval() {
 
 		Action e = this;
 
 		if (!e.active){
-			return; // ignore if not active;
+			return actionName + ":!active"; // ignore if not active;
+		}
+		
+		if (e.target == null || e.method == ""){
+			AConstants.get().check(e.actionName);
+			//System.out.println("ACTION: performing action "+ e.actionName);
+			return actionName;
 		}
 		
 		//System.out.println("ACTION: Evaluating action name: "+ actionName);
@@ -119,8 +142,13 @@ public class Action {
 		if (toInvoke != null) {
 			
 			try {
-				//System.out.println("executing action, method: " + e.method.toString());
+				if(echo) {System.out.println("executing action, method: " + e.method.toString() +
+						", parameters: " + e.params.toString() +
+						", target: " + e.target.getClass().getName()
+				);
+				}
 				toInvoke.invoke(e.target, e.params); // here methods is invoked.
+				performed = true;
 				if (e.autoRemove){
 					e.active = false;
 				}
@@ -129,6 +157,7 @@ public class Action {
 				t.printStackTrace();
 			}
 		}
+		return actionName;
 	}
 
 }
